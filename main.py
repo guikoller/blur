@@ -5,7 +5,7 @@ import math
 
 #===============================================================================
 
-INPUT_IMAGE =  './Exemplos/a01 - Original.bmp'
+INPUT_IMAGE =  './Exemplos/b01 - Original.bmp'
 NUM_VIZINHOS = 5
 
 #===============================================================================
@@ -26,27 +26,29 @@ def blur(img, vizinhos):
     return output
 
 def blurLine(img, vizinhos):
-    h, w = img.shape[:2]
+    h, w, channel = img.shape[:3]
     margin = vizinhos // 2
     output = img.copy()
-    for y in range(margin, h - margin):
-        for x in range(margin, w - margin):
-            soma = 0
-            for i in range(-margin, margin + 1):
-                soma += img[y + i, x]
-            output[y, x] = soma / vizinhos
+    for c in range(channel):
+        for y in range(margin, h - margin):
+            for x in range(margin, w - margin):
+                soma = 0
+                for i in range(-margin, margin + 1):
+                    soma += img[y + i, x, c]
+                output[y, x, c] = soma / vizinhos
     return output
 
 def blurCol(img, vizinhos):
-    h, w = img.shape[:2]
+    h, w, channel = img.shape[:3]
     margin = vizinhos // 2
     output = img.copy()
-    for y in range(margin, h - margin):
-        for x in range(margin, w - margin):
-            soma = 0
-            for i in range(-margin, margin + 1):
-                soma += img[y, x+i]
-            output[y, x] = soma / vizinhos
+    for c in range(channel):
+        for y in range(margin, h - margin):
+            for x in range(margin, w - margin):
+                soma = 0
+                for i in range(-margin, margin + 1):
+                    soma += img[y, x+i, c]
+                output[y, x, c] = soma / vizinhos
     return output
 
 def blurXY(img, vizinhos):
@@ -129,8 +131,8 @@ def main ():
     img_integral = blur_integral(img,NUM_VIZINHOS)
     cv2.imwrite ('blurIntegral.png', img_integral*255)
     print('Blur Integral')
-    comparaItegral = compare(csv_blur, img_integral)
-    cv2.imwrite ('comparaItegral.png', comparaItegral*255)
+    comparaIntegral = compare(csv_blur, img_integral)
+    cv2.imwrite ('comparaIntegral.png', comparaIntegral*255)
 
 if __name__ == '__main__':
     main ()
